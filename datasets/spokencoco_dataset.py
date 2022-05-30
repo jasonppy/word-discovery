@@ -7,7 +7,6 @@ import torch.nn.functional
 import random
 import soundfile as sf
 from torch.utils.data import Dataset
-import h5py
 import pickle
 import torchvision.transforms as transforms
 from PIL import Image

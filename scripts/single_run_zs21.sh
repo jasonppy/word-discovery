@@ -1,15 +1,15 @@
 
 model=$1 #vg-hubert_3 or vg-hubert_4
-tgt_layer_for_attn=$2 # 7
+tgt_layer_for_attn=$2 # 9
 k=$3 # 4096
-threshold=$4 # 0.9
-reduce_method=$5
-segment_method=$6
+threshold=$4 # 0.7
+reduce_method=$5 # weightedmean
+segment_method=$6 # clsAttn
 seed=$7
 dataset=zs21
 
-exp_dir_prefix=/data/scratch/pyp/exp_pyp
-save_root_prefix=/data/scratch/pyp/exp_pyp
+exp_dir_prefix=/data1/scratch/exp_pyp
+save_root_prefix=/data1/scratch/exp_pyp
 data_root=/data2/scratch/pyp/datasets/vads
 audio_base_path=/data2/scratch/pyp/datasets/2020/2017/english/train
 

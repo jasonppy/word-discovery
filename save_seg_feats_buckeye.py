@@ -76,7 +76,7 @@ print("I am process %s, running on %s: starting (%s)" % (
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--exp_dir", type=str)
-parser.add_argument("--dataset", type=str, default='buckeyetest', choices=['buckeyeval', 'buckeyetest'])
+parser.add_argument("--dataset", type=str, default='buckeyeval', choices=['buckeyeval', 'buckeyetest'])
 parser.add_argument("--data_root", type=str, default="/data1/scratch/datasets_pyp/Buckeye")
 parser.add_argument("--save_root", type=str, default="/data2/scratch/pyp/discovery/word_unit_discovery/")
 parser.add_argument("--percentage", type=int, default=None, help="if None, the feats_type is the original name, otherwise, it's feats_type_percentage")
@@ -90,9 +90,9 @@ save_root = os.path.join(args.save_root, args.exp_dir.split("/")[-1])
 feats_type = args.dataset + "_" + args.reduce_method + "_" + str(args.threshold) + "_" + str(args.tgt_layer_for_attn) + "_" + args.segment_method
 if args.percentage is not None:
     feats_type = feats_type + "_" + str(args.percentage)
-save_root = os.path.join(save_root, feats_type)
-print("data save at: ", save_root)
-os.makedirs(save_root, exist_ok=True)
+out_dir = os.path.join(args.data_root, feats_type)
+print("data save at: ", out_dir)
+os.makedirs(out_dir, exist_ok=True)
 print(args)
 if not os.path.isdir(args.exp_dir):
     raise RuntimeError(f"{args.exp_dir} does not exist!!")
@@ -137,8 +137,7 @@ else:
     with open(os.path.join(args.data_root, "vad", f"{split}.pkl"), "rb") as f:
         all_data = pickle.load(f)
 
-out_dir = os.path.join(args.data_root, feats_type)
-os.makedirs(out_dir, exist_ok=True)
+
 for key in tqdm.tqdm(all_data.keys()):
     pointer = 0
     wav_fn = os.path.join(args.data_root, key+".wav")

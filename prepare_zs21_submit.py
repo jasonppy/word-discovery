@@ -2,7 +2,6 @@ import argparse
 import json
 import os
 import time
-from progressbar import Percentage
 import torch
 import tqdm
 import numpy as np

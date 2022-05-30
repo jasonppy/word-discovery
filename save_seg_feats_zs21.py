@@ -128,8 +128,6 @@ model = model.cuda()
 
 data_start_time = time.time()
 
-with open(args.data_json, "r") as f:
-    data_json = json.load(f)['data']
 
 locF_temp = []
 j = 0

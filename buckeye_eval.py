@@ -29,7 +29,7 @@ def check_argv():
     parser = argparse.ArgumentParser(
         description=__doc__.strip().split("\n")[0], add_help=False
         )
-    parser.add_argument("--dataset", type=str, default='buckeyetest', choices=['buckeyeval', 'buckeyetest'])
+    parser.add_argument("--dataset", type=str, default='buckeyeval', choices=['buckeyeval', 'buckeyetest'])
     parser.add_argument("--data_root", type=str, default="/data1/scratch/datasets_pyp/Buckeye")
     parser.add_argument("--percentage", type=int, default=None, help="if None, the feats_type is the original name, otherwise, it's feats_type_percentage")
     parser.add_argument("--threshold", type=float, default=0.90)

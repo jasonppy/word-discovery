@@ -21,8 +21,8 @@ python \
 --batch_size 100 \
 --val_batch_size 100 \
 --n_epochs 30 \
---n_print_steps 1 \
---n_val_steps 2 \
+--n_print_steps 2000 \
+--n_val_steps 4000 \
 --lr 0.00005 \
 --warmup_fraction 0.1 \
 --vit_arch 'vitsmall' \

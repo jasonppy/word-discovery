@@ -3,7 +3,6 @@ import argparse
 import json
 import os
 import time
-from progressbar import Percentage
 import torch
 import numpy as np
 import pickle

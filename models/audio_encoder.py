@@ -1,5 +1,4 @@
-# c.f. fairseq/fairseq/models/wav2vec/wav2vec2.py, modified to return intermediate
-# layer results
+# c.f. fairseq/fairseq/models/wav2vec/wav2vec2.py, with modification
 
 #
 # Copyright (c) Facebook, Inc. and its affiliates.
