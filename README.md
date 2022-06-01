@@ -82,19 +82,53 @@ cls_attn_weights = attn_weights[:, 0, 1:] # [num_heads, T+1, T+1] -> [num_heads,
 out = cls_attn_seg(cls_attn_weights, threshold, spf, audio_len_in_sec) # out contains attn boundaries and word boundaries in intervals
 ```
 # 3. Speech Segmentation and Word Detection on SpokenCOCO
-This section illustrates how to apply the VG-HuBERT model to segment speech and detect words in SpokenCOCO. Please first download the SpokenCOCO audios and MSCOCO images, and the karpathy split json files with word alignment following:
+This section illustrates how to apply the VG-HuBERT model to segment speech and detect words in SpokenCOCO. Please first download the SpokenCOCO audios and MSCOCO images following:
 ```bash
-coco_root=/path/to/coco
+coco_root=/path/to/coco/
 wget https://data.csail.mit.edu/placesaudio/SpokenCOCO.tar.gz -P ${coco_root} # 64G
 wget http://images.cocodataset.org/zips/train2014.zip -P {coco_root}
 wget http://images.cocodataset.org/zips/val2014.zip -P {coco_root}
 ```
 Please untar/unzip the compressed files after downloading them
 
-Then 
+Then download karpathy split json files with word alignment 
 ```bash
-wget ..... -P ${coco_root}/SpokenCOCO
+wget ..... -P ${coco_root}/SpokenCOCO/
 ```
+
+Then you are all set, just run
+
+```bash
+cd ./scripts
+bash run_spokencoco.sh vg-hubert_3 9 4096 0.7 max clsAttn 1 
+```
+
+after this please find `vg-hubert_3_spokencoco_max_0.7_9_clsAttn.log` in ./logs/ with the following content:
+```log
+AScore: 0.6591
+IoU: 0.6151
+IoT: 0.6603
+Percentage that the segment falls within the word interval: 65.79
+Average distance (in seconds) between segment center and word center: 0.0647
+Percentage that word centers fall into the code segment: 85.47%
+code coverage (average over all *words*): 0.7098
+code coverage (average over all *word types*): 0.9623
+coverage per sentence: 0.7095
+boundary precision: 0.3619
+boundary recall: 0.2721
+boundary F1: 0.3107
+boundary over-segmentation: -0.2480
+boundary R value: 0.4459
+number of total codes occurance: 179179
+purity (using most occured word as code assignment): 0.759
+purity (using highest f1 word as code assignment): 0.681
+nmi: 0.115
+1014 / 6085 words with an F1 score >= 0.5
+avg F1 = 89.30% for top 250 words; 23.81% for all 6001 words
+done
+```
+
+To get the note that we set different layers and threshold for getting the best Area group, Boundary group and Word group result (for def of the metrics in these groups, plz refer to the [paper](https://arxiv.org/pdf/2203.15081.pdf)). The hyperparameters and results on val set for VG-HuBERT_3 and VG-HuBERT_4 is...
 
 
 # 4. Score VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020
