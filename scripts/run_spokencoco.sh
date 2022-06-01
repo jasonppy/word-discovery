@@ -8,13 +8,10 @@ segment_method=$6 # clsAttn
 seed=$7 # 1
 dataset=spokencoco
 
-model_root=/data/scratch/pyp/exp_pyp
-data_root=/data/scratch/pyp/datasets/coco_pyp
-save_root=/data/scratch/pyp/exp_pyp
 
-model_root=/data/scratch/pyp/exp_pyp
-data_root=/data/scratch/pyp/datasets/coco_pyp
-save_root=/data/scratch/pyp/exp_pyp
+model_root=/path/to/root/of/model/parent_folder # i.e. the parent folder of folder vg-hubert_x
+data_root=/path/to/coco/
+save_root= # save intermediate data
 
 data_json="${data_root}/SpokenCOCO/SpokenCOCO_val_unrolled_karpathy_with_alignments.json"
 
