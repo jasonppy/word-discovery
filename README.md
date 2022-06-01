@@ -37,7 +37,7 @@ from models import audio_encoder
 from itertools import groupby
 from operator import itemgetter
 
-def cls_attn_seg(cls_attn_weights, threshold, spf):
+def cls_attn_seg(cls_attn_weights, threshold, spf, audio_len_in_sec):
     threshold_value = torch.quantile(cls_attn_weights, threshold, dim=-1, keepdim=True) # [n_h, T]
     cls_attn_weights_sum = cls_attn_weights.sum(0)
     boundary_idx = torch.where((cls_attn_weights >= threshold_value).float().sum(0) > 0)[0].cpu().numpy()
@@ -52,7 +52,7 @@ def cls_attn_seg(cls_attn_weights, threshold, spf):
     word_boundary_list = [attn_boundary_intervals[0][0]/2] # fist boundary
     for left, right in zip(attn_boundary_intervals[:-1], attn_boundary_intervals[1:]):
         word_boundaries_list.append((left[1]+right[0])/2.)
-    word_boundaries_line.append((attn_boundary_intervals[-1][1]+threshold_value.shape[-1]*spf)/2) # last boundary
+    word_boundaries_line.append((attn_boundary_intervals[-1][1]+audio_len_in_sec)/2) # last boundary
     for i in range(len(word_boundaries_list)-1):
         word_boundary_intervals.append([word_boundaries_line[i], word_boundaries_line[i+1]])
     return {"attn_boundary_intervals": attn_boundary_intervals, "word_boundary_intervals": word_boundary_intervals}
@@ -69,6 +69,7 @@ model = model.cuda()
 # load waveform (do not layer normalize the waveform!)
 audio, sr = sf.read(wav_file, dtype = 'float32')
 assert sr == 16000
+audio_len_in_sec = len(audio) / sr
 audio = torch.from_numpy(audio).unsqueeze(0).cuda() # [T] -> [1, T]
 
 # model forward
@@ -78,19 +79,34 @@ feats = model_out['features'].squeeze(0)[1:] # [1, T+1, D] -> [T, D]
 spf = audio.shape[-1]/sr/feats.shape[-2]
 attn_weights = model_out['attn_weights'].squeeze(0) # [1, num_heads, T+1, T+1] -> [num_heads, T+1, T+1] (for the two T+1, first is target length then the source)
 cls_attn_weights = attn_weights[:, 0, 1:] # [num_heads, T+1, T+1] -> [num_heads, T]
-out = cls_attn_seg(cls_attn_weights, threshold, spf) # out contains attn boundaries and word boundaries in intervals
+out = cls_attn_seg(cls_attn_weights, threshold, spf, audio_len_in_sec) # out contains attn boundaries and word boundaries in intervals
+```
+# 3. Speech Segmentation and Word Detection on SpokenCOCO
+This section illustrates how to apply the VG-HuBERT model to segment speech and detect words in SpokenCOCO. Please first download the SpokenCOCO audios and MSCOCO images, and the karpathy split json files with word alignment following:
+```bash
+coco_root=/path/to/coco
+wget https://data.csail.mit.edu/placesaudio/SpokenCOCO.tar.gz -P ${coco_root} # 64G
+wget http://images.cocodataset.org/zips/train2014.zip -P {coco_root}
+wget http://images.cocodataset.org/zips/val2014.zip -P {coco_root}
+```
+Please untar/unzip the compressed files after downloading them
+
+Then 
+```bash
+wget ..... -P ${coco_root}/SpokenCOCO
 ```
 
-# 3. Score Models on Buckeye Segmentation and ZeroSpeech2020
+
+# 4. Score VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020
 This section illustrate how evaluate VG-HuBERT on Buckeye and ZeroSpeech2020 (i.e. to get result in table 4 and 5 in our [word discovery paper](https://arxiv.org/pdf/2203.15081.pdf))
 
-## 3.1 Buckeye
+## 4.1 Buckeye
 Buckeye evaluating largely utilize [Herman's repo](https://github.com/kamperh/vqwordseg), which accompanies his [recent paper](https://arxiv.org/abs/2202.11929). Thank Herman for publish the paper and codebase at the same time!
 
 First of all, please create a folder for all the data you will download to later, let's name it `/Buckeye/`
 Please follow the [original website](https://buckeyecorpus.osu.edu/) to obtain the Buckeye dataset, put all `s*` folders in `/Buckeye/`. After that, download the VAD file from [Herman repo](https://github.com/kamperh/zerospeech2021_baseline/tree/master/datasets/buckeye) and put them input `/Buckeye/vad/` folder. Lastly, download the ground truth word alignment file from [this link](https://github.com/kamperh/vqwordseg/releases/download/v1.0/buckeye.zip), extract all three folders and put them in `/Buckeye/buckeye_segment_alignment`. 
 
-After downloading is done. change the `model_root` and `data_root` in `./scripts/single_run_buckeye.sh`, then
+After downloading is done. change the `model_root` and `data_root` in `./scripts/run_buckeye.sh`, then
 
 ```bash
 cd scripts
@@ -112,11 +128,59 @@ F-score: 30.99%
 OS: -7.58%
 ```
 
-## 3.2 ZeroSpeech2020
-Let me take a break before starting this
+## 4.2 ZeroSpeech2020
+We'll do ZS2020 Spoken Term Discovery track (just English).
+
+First follow the ZeroSpeech 2020 section on the ZeroSpeech website to download the data and ground truth labels (remember to also download `2017_vads.zip`). This should be free and easy, like the rest of the steps :). Suppose you have put the `2020` folder at `/zs20/`. Remember to put `ENGLISH_VAD.csv` from 2017_vads.zip at `/2020/ENGLISH_VAD.csv`.
+
+Then install zerospeech 2020 evaluation toolkit following [this official repo](https://github.com/zerospeech/zerospeech2020). Assume you have clone the repo at `~/zerospeech2020`.
+
+Now you should be ready to test the models on this task. similarly, change the `model_root` and `data_root` in `./scripts/run_zs20.sh` to the parent folder of your model folder and data folder (for data_root, is should be `/zs20` if you follow the above)
+
+Then run
+```bash
+cd ./scripts
+bash run_zs20.sh vg-hubert_3 9 16384 0.7 max clsAttn 1
+```
+
+The above run takes a long time, so better run it as a sbatch job, or open a tmux window for it. After the job finishes, you should be able to find the output file `~/zerospeech2020/english_vg-hubert_3_max_0.7_9_clsAttn_16384.json` with content:
+
+```json
+{
+    "2017-track2": {
+        "english": {
+            "scores": {
+                "ned": 0.42968707380581783,
+                "coverage": 0.9552742717879052,
+                "words": 93769
+            },
+            "details": {
+                "boundary_precision": 0.4477182844906101,
+                "boundary_recall": 0.5690987635775963,
+                "boundary_fscore": 0.5011637494055812,
+                "grouping_precision": "NA",
+                "grouping_recall": "NA",
+                "grouping_fscore": "NA",
+                "token_precision": 0.1728015507130922,
+                "type_precision": 0.06441361217459927,
+                "token_recall": 0.16639803706534623,
+                "type_recall": 0.28718143780905286,
+                "token_fscore": 0.16953935014383406,
+                "type_fscore": 0.1052255642372453,
+                "words": 93769,
+                "coverage": 0.9552742717879052,
+                "ned": 0.42968707380581783,
+                "pairs": 6122486
+            }
+        }
+    }
+}
+
+```
 
 
-# 4. Training Dataset
+
+# 5. Training Dataset
 Feel free to skip this section if you don't want to train the model and don't want to test the word discovery performance on SpokenCOCO.
 
 For training, we use SpokenCOCO, you can download the spoken captions at []() and download the images from [the MSCOCO website](https://cocodataset.org/#download) via

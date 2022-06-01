@@ -6,9 +6,8 @@ reduce_method=$4 # mean, this won't affect results
 segment_method=$5 # clsAttn
 dataset=$6 # (lowercased) buckeyeval or buckeyetest
 
-model_fn=/path/to/root/of/model/folder
+model_root=/path/to/root/of/model/parent_folder # i.e. the parent folder of folder vg-hubert_x
 data_root=/Buckeye
-
 
 source ~/miniconda3/etc/profile.d/conda.sh
 conda activate tf2

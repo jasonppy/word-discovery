@@ -98,14 +98,8 @@ parser.add_argument("--tgt_layer_for_attn", type=int, default=7, help="where att
 parser.add_argument("--level2", action="store_true", default=False, help="if True, use feats and atten weights from level2 (not avaliable for models that only has one level of w2v2)")
 parser.add_argument("--segment_method", type=str, choices=['clsAttn', 'forceAlign'], default=None, help="if use cls attn segmentation or use force alignment segmentation. If use, need model_args.use_audio_cls_token to be True")
 args = parser.parse_args()
-
-save_root = os.path.join(args.save_root, args.exp_dir.split("/")[-1])
 feats_type = args.dataset + "_" + args.reduce_method + "_" + str(args.threshold) + "_" + str(args.tgt_layer_for_attn) + "_" + args.segment_method
-# if args.level2:
-#     feats_type = feats_type + "_" + "level2"
-if args.percentage is not None:
-    feats_type = feats_type + "_" + str(args.percentage)
-save_root = os.path.join(save_root, feats_type)
+save_root = os.path.join(args.data_root, args.exp_dir.split("/")[-1], feats_type)
 print("data save at: ", save_root)
 os.makedirs(save_root, exist_ok=True)
 print(args)
@@ -117,10 +111,7 @@ with open(os.path.join(args.exp_dir, "args.pkl"), "rb") as f:
     model_args = pickle.load(f)
 model = audio_encoder.AudioEncoder(model_args)
 bundle = torch.load(os.path.join(args.exp_dir, "best_bundle.pth"))
-if "dual_encoder" in bundle:
-    model.carefully_load_state_dict(bundle['dual_encoder'], load_all=True)
-else:
-    model.carefully_load_state_dict(bundle['model'], load_all=True)
+model.carefully_load_state_dict(bundle['dual_encoder'], load_all=True)
 model.eval()
 model = model.cuda()
 ########################## setup model ##########################
@@ -137,8 +128,8 @@ missing_ali = 0
 level2 = False
 tgt_layer = args.tgt_layer_for_attn
 all_data = defaultdict(list)
-if not os.path.isfile(os.path.join(args.data_root,"ENGLISH_VAD.pkl")):
-    with open(os.path.join(args.data_root,"ENGLISH_VAD.csv"), "r") as f:
+if not os.path.isfile(os.path.join(args.data_root,"2020/ENGLISH_VAD.pkl")):
+    with open(os.path.join(args.data_root,"2020/ENGLISH_VAD.csv"), "r") as f:
         reader = csv.reader(f, delimiter="\t")
         header = next(reader)
         for i, line in enumerate(reader):
@@ -146,16 +137,16 @@ if not os.path.isfile(os.path.join(args.data_root,"ENGLISH_VAD.pkl")):
             # if line
             all_data[line[0]].append([float(line[1]), float(line[2])])
 
-    with open(os.path.join(args.data_root,"ENGLISH_VAD.pkl"), "wb") as f:
+    with open(os.path.join(args.data_root,"2020/ENGLISH_VAD.pkl"), "wb") as f:
         pickle.dump(all_data, f)
 else:
-    with open(os.path.join(args.data_root,"ENGLISH_VAD.pkl"), "rb") as f:
+    with open(os.path.join(args.data_root,"2020/ENGLISH_VAD.pkl"), "rb") as f:
         all_data = pickle.load(f)
 
-        
+audio_base_path = os.path.join(args.data_root, "2020/2017/english/train")
 for key in tqdm.tqdm(all_data.keys()):
     pointer = 0
-    wav_fn = os.path.join(args.audio_base_path, key+".wav")
+    wav_fn = os.path.join(audio_base_path, key+".wav")
     if not os.path.isfile(wav_fn):
         print(f"{wav_fn} not found")
         continue

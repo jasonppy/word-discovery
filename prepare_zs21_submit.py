@@ -10,7 +10,6 @@ from collections import defaultdict, Counter
 print("\nI am process %s, running on %s: starting (%s)" % (
         os.getpid(), os.uname()[1], time.asctime()))
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--data_json", type=str, default="/data1/scratch/coco_pyp/SpokenCOCO/SpokenCOCO_val_unrolled_karpathy_with_alignments.json", help="the fn of force alignment json file")
 parser.add_argument("--exp_dir", type=str, default="/scratch/cluster/pyp/exp_pyp/discovery/word_unit_discovery/disc-23/mean_0.9_7_forceAlign")
 parser.add_argument("--out_dir", type=str, default="/data2/scratch/pyp/exp_pyp/zs2020/2017/track2")
 parser.add_argument("--k", type=int, default=4096)
