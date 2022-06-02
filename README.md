@@ -1,7 +1,7 @@
 # 1. Environment
 It is recommended to create a new conda environment for this project with `conda create -n wd python=3.9`, the requirement on python version is not rigid, as long as you can install the packages listed in `./requirements.txt`. The requirement for the versions of packages is not rigid either, the listed version is tested, but lower version might also work.
 
-If you want to get the attention weights of different attention head (**which is required for all word and boundary detection results**), you need to modify the output of the `multi_head_attention_forward` function in the PyTorch package at`torch/nn/functional`. if you install pytorch using conda in environment `wd`, the path of the file should be `path_to_conda/envs/wd/lib/python3.9/site-packages/torch/nn/functional.py`. get to function `multi_head_attention_forward`, and change the output as the following
+If you want to get the attention weights of different attention head (**which is required for all word and boundary detection experiments**), you need to modify the output of the `multi_head_attention_forward` function in the PyTorch package at`torch/nn/functional`. if you install pytorch using conda in environment `wd`, the path of the file should be `path_to_conda/envs/wd/lib/python3.9/site-packages/torch/nn/functional.py`. get to function `multi_head_attention_forward`, and change the output as the following
 
 ```python
     # if need_weights:
@@ -215,16 +215,25 @@ The above run takes a long time, so better run it as a sbatch job, or open a tmu
 
 
 # 5. Training Dataset
-Feel free to skip this section if you don't want to train the model and don't want to test the word discovery performance on SpokenCOCO.
+Feel free to skip this section if you don't want to train the model.
 
-For training, we use SpokenCOCO, you can download the spoken captions at []() and download the images from [the MSCOCO website](https://cocodataset.org/#download) via
+If you do want to train a VG-HuBERT model, please first download the weight of pretrained HuBERT and DINO-ViT, we use HuBERT Base trained on librispeech 960h unsup speech and DINO ViT Small 8x8,
+
+We can download the weights via
 ```bash
-coco_root=path/to/coco
-wget https://data.csail.mit.edu/placesaudio/SpokenCOCO.tar.gz -P ${coco_root} # 64G
-wget http://images.cocodataset.org/zips/train2014.zip -P {coco_root}
-wget http://images.cocodataset.org/zips/val2014.zip -P {coco_root}
+pretrained_root=/path/to/pretrained/hubertAndDINO
+wget https://dl.fbaipublicfiles.com/hubert/hubert_base_ls960.pt -P ${pretrained_root}
+wget https://dl.fbaipublicfiles.com/dino/dino_deitsmall8_pretrain/dino_deitsmall8_pretrain_full_checkpoint.pth -P ${pretrained_root}
 ```
-Please untar/unzip the compressed files after downloading them
+
+Then, Please follow section 3 to download SpokenCOCO dataset (don't forget the json file).
+
+After that, change the `pretrained_root`, `model_root`, and `data_root` to desired dir, you are good to go
+
+```bash
+cd ./scripts
+bash training.sh
+```
 
 If you want to train the model on Places, please follow
 ```bash
@@ -237,5 +246,4 @@ wget https://data.csail.mit.edu/placesaudio/placesaudio_2020_splits.tar.gz -P ${
 cd ${places_root}
 tar -xf placesaudio_2020_splits.tar.gz
 ```
-
 

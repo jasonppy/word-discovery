@@ -3,21 +3,24 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate tf2
 export CUDA_VISIBLE_DEVICES=0,1
 
+pretrained_root=/path/to/pretrained/hubertAndDINO
+model_root=/path/to/root/of/model/parent_folder # i.e. the parent folder of folder vg-hubert_x
+data_root=/path/to/coco/
+
 python \
 ../run_spokencoco.py \
---validate \
---random_init_last_x 4 \
---load_hubert_weights "/data/scratch/pyp/exp_pyp/discovery/pretrained_models/hubert_base_ls960.pt" \
---load_pretrained_vit "/data/scratch/pyp/exp_pyp/discovery/pretrained_models" \
+--random_init_last_x 3 \
+--load_hubert_weights ${pretrained_root}/hubert_base_ls960.pt \
+--load_pretrained_vit ${pretrained_root} \
 --nonlinear_proj \
 --opt_level O1 \
 --cls_loss \
 --use_audio_cls_token \
 --audio_feat_len 8 \
 --num_workers 4 \
---train_audio_dataset_json_file /data/scratch/pyp/datasets/coco_pyp/SpokenCOCO/SpokenCOCO_train_unrolled_karpathy.json \
---val_audio_dataset_json_file /data/scratch/pyp/datasets/coco_pyp/SpokenCOCO/SpokenCOCO_val_unrolled_karpathy.json \
---exp_dir /data/scratch/pyp/exp_pyp/discovery/vg-hubert_3 \
+--train_audio_dataset_json_file ${data_root}/SpokenCOCO/SpokenCOCO_train_unrolled_karpathy.json \
+--val_audio_dataset_json_file ${data_root}/SpokenCOCO/SpokenCOCO_val_unrolled_karpathy.json \
+--exp_dir ${model_root}/vg-hubert_3 \
 --batch_size 100 \
 --val_batch_size 100 \
 --n_epochs 30 \
