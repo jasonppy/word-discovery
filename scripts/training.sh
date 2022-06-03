@@ -1,6 +1,6 @@
 #!/bin/sh
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 export CUDA_VISIBLE_DEVICES=0,1
 
 pretrained_root=/path/to/pretrained/hubertAndDINO

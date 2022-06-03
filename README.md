@@ -1,4 +1,15 @@
-# 1. Environment
+# Word Discovery in Visually Grounded, Self-Supervised Speech Models
+This is the codebase for [paper](https://arxiv.org/pdf/2203.15081.pdf) 
+```
+@inproceedings{peng2022word,
+  title={Word Discovery in Visually Grounded, Self-Supervised Speech Models},
+  author={Peng, Puyuan and Harwath, David},
+  booktitle={Proc. INTERSPEECH},
+  year={2022}
+}
+```
+
+## 1. Environment
 It is recommended to create a new conda environment for this project with `conda create -n wd python=3.9`, the requirement on python version is not rigid, as long as you can install the packages listed in `./requirements.txt`. The requirement for the versions of packages is not rigid either, the listed version is tested, but lower version might also work.
 
 If you want to get the attention weights of different attention head (**which is required for all word and boundary detection experiments**), you need to modify the output of the `multi_head_attention_forward` function in the PyTorch package at`torch/nn/functional`. if you install pytorch using conda in environment `wd`, the path of the file should be `path_to_conda/envs/wd/lib/python3.9/site-packages/torch/nn/functional.py`. get to function `multi_head_attention_forward`, and change the output as the following
@@ -16,10 +27,10 @@ If you want to get the attention weights of different attention head (**which is
 
 Simply put, originally, the return of `attn_output_weights` is summed over all attention heads, and we don't want to do that so that we can have the attention weights from different heads.
 
-# 2. Apply VG-HuBERT on Speech Segmentation
+## 2. Apply VG-HuBERT on Speech Segmentation
 To enable quickly applying the VG-HuBERT on speech segmentation, we provide the following standalone script. You need to provide four arguments to make it run:
 
-1. `model_path`. It should be the directory the `.pth` and `args.pkl` are at. We open provide two trained models, [VG-HuBERT_3](link) and [VG-HuBERT_4](link). VG-HuBERT_3 should performance better on speech segmentation.
+1. `model_path`. It should be the directory the `.pth` and `args.pkl` are at. We open provide two trained models, [VG-HuBERT_3](https://www.cs.utexas.edu/~harwath/model_checkpoints/vg_hubert/vg-hubert_3.tar) and [VG-HuBERT_4](https://www.cs.utexas.edu/~harwath/model_checkpoints/vg_hubert/vg-hubert_4.tar). VG-HuBERT_3 should performance better on speech segmentation. Please untar the file after downloading.
 
 2. `wav_file`. The speech file you want to segment, we recommend the length of the speech to be 1 ~ 8 seconds, although in our experience the segmentation performance of VG-HuBERT is robust to the length of the input. the file should be [SoundFlie](https://pysoundfile.readthedocs.io/en/latest/) Readable, i.e. .wav, .flac etc.
 
@@ -39,7 +50,6 @@ from operator import itemgetter
 
 def cls_attn_seg(cls_attn_weights, threshold, spf, audio_len_in_sec):
     threshold_value = torch.quantile(cls_attn_weights, threshold, dim=-1, keepdim=True) # [n_h, T]
-    cls_attn_weights_sum = cls_attn_weights.sum(0)
     boundary_idx = torch.where((cls_attn_weights >= threshold_value).float().sum(0) > 0)[0].cpu().numpy()
     attn_boundary_intervals = []
     word_boundaries_intervals = []
@@ -81,7 +91,7 @@ attn_weights = model_out['attn_weights'].squeeze(0) # [1, num_heads, T+1, T+1] -
 cls_attn_weights = attn_weights[:, 0, 1:] # [num_heads, T+1, T+1] -> [num_heads, T]
 out = cls_attn_seg(cls_attn_weights, threshold, spf, audio_len_in_sec) # out contains attn boundaries and word boundaries in intervals
 ```
-# 3. Speech Segmentation and Word Detection on SpokenCOCO
+## 3. Speech Segmentation and Word Detection on SpokenCOCO
 This section illustrates how to apply the VG-HuBERT model to segment speech and detect words in SpokenCOCO. Please first download the SpokenCOCO audios and MSCOCO images following:
 ```bash
 coco_root=/path/to/coco/
@@ -93,8 +103,9 @@ Please untar/unzip the compressed files after downloading them
 
 Then download karpathy split json files with word alignment 
 ```bash
-wget ..... -P ${coco_root}/SpokenCOCO/
+wget https://www.cs.utexas.edu/~harwath/model_checkpoints/vg_hubert/karpathy_json.tar -P ${coco_root}/SpokenCOCO/
 ```
+Please also untar it. 
 
 Then you are all set, just run
 
@@ -131,10 +142,10 @@ done
 To get the note that we set different layers and threshold for getting the best Area group, Boundary group and Word group result (for def of the metrics in these groups, plz refer to the [paper](https://arxiv.org/pdf/2203.15081.pdf)). The hyperparameters and results on val set for VG-HuBERT_3 and VG-HuBERT_4 is...
 
 
-# 4. Score VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020
+## 4. Score VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020
 This section illustrate how evaluate VG-HuBERT on Buckeye and ZeroSpeech2020 (i.e. to get result in table 4 and 5 in our [word discovery paper](https://arxiv.org/pdf/2203.15081.pdf))
 
-## 4.1 Buckeye
+### 4.1 Buckeye
 Buckeye evaluating largely utilize [Herman's repo](https://github.com/kamperh/vqwordseg), which accompanies his [recent paper](https://arxiv.org/abs/2202.11929). Thank Herman for publish the paper and codebase at the same time!
 
 First of all, please create a folder for all the data you will download to later, let's name it `/Buckeye/`
@@ -162,8 +173,8 @@ F-score: 30.99%
 OS: -7.58%
 ```
 
-## 4.2 ZeroSpeech2020
-We'll do ZS2020 Spoken Term Discovery track (just English).
+### 4.2 ZeroSpeech2020
+We'll do the ZS2020 Spoken Term Discovery track (just English).
 
 First follow the ZeroSpeech 2020 section on the ZeroSpeech website to download the data and ground truth labels (remember to also download `2017_vads.zip`). This should be free and easy, like the rest of the steps :). Suppose you have put the `2020` folder at `/zs20/`. Remember to put `ENGLISH_VAD.csv` from 2017_vads.zip at `/2020/ENGLISH_VAD.csv`.
 
@@ -214,7 +225,7 @@ The above run takes a long time, so better run it as a sbatch job, or open a tmu
 
 
 
-# 5. Training Dataset
+## 5. Training
 Feel free to skip this section if you don't want to train the model.
 
 If you do want to train a VG-HuBERT model, please first download the weight of pretrained HuBERT and DINO-ViT, we use HuBERT Base trained on librispeech 960h unsup speech and DINO ViT Small 8x8,
