@@ -16,7 +16,7 @@ save_root= # save intermediate data
 data_json="${data_root}/SpokenCOCO/SpokenCOCO_val_unrolled_karpathy_with_alignments.json"
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 python ../save_seg_feats.py \
 --segment_method ${segment_method} \
 --threshold ${threshold} \
@@ -29,7 +29,7 @@ python ../save_seg_feats.py \
 --dataset ${dataset}
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 python ../run_kmeans.py \
 --seed ${seed} \
 --segment_method ${segment_method} \
@@ -42,7 +42,7 @@ python ../run_kmeans.py \
 
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 python ../unit_analysis.py \
 --exp_dir "${save_root}/${model}/${dataset}_${reduce_method}_${threshold}_${tgt_layer_for_attn}_${segment_method}" \
 --data_json ${data_json} \

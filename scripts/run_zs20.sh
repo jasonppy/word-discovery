@@ -14,7 +14,7 @@ data_root=/zs20/
 
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 python ../save_seg_feats_zs21.py \
 --data_root ${data_root} \
 --segment_method ${segment_method} \
@@ -26,7 +26,7 @@ python ../save_seg_feats_zs21.py \
 
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate faiss_env
+conda activate wd
 python ../run_kmeans.py \
 --seed ${seed} \
 --segment_method ${segment_method} \
@@ -38,7 +38,7 @@ python ../run_kmeans.py \
 --dataset ${dataset}
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 python ../prepare_zs21_submit.py \
 --exp_dir "${data_root}/${model}/${dataset}_${reduce_method}_${threshold}_${tgt_layer_for_attn}_${segment_method}" \
 --k ${k} \

@@ -10,7 +10,7 @@ model_root=/path/to/root/of/model/parent_folder # i.e. the parent folder of fold
 data_root=/Buckeye
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 python ../save_seg_feats_buckeye.py \
 --data_root ${data_root} \
 --segment_method ${segment_method} \
@@ -21,7 +21,7 @@ python ../save_seg_feats_buckeye.py \
 --dataset ${dataset}
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate tf2
+conda activate wd
 python ../buckeye_eval.py \
 --data_root ${data_root} \
 --segment_method ${segment_method} \
