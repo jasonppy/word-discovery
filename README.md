@@ -1,5 +1,5 @@
 # Word Discovery in Visually Grounded, Self-Supervised Speech Models
-This is the codebase for [paper](https://arxiv.org/pdf/2203.15081.pdf) 
+This is the official codebase for paper [Word Discovery in Visually Grounded, Self-Supervised Speech Models](https://arxiv.org/pdf/2203.15081.pdf).
 ```
 @inproceedings{peng2022word,
   title={Word Discovery in Visually Grounded, Self-Supervised Speech Models},
@@ -257,4 +257,3 @@ wget https://data.csail.mit.edu/placesaudio/placesaudio_2020_splits.tar.gz -P ${
 cd ${places_root}
 tar -xf placesaudio_2020_splits.tar.gz
 ```
-
