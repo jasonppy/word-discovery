@@ -15,9 +15,6 @@ import numpy as np
 import sys
 import os
 
-# from . import cluster_analysis
-# from cluster_analysis import purity
-# from utils import cluster_analysis, dp_align
 
 
 #-----------------------------------------------------------------------------#
