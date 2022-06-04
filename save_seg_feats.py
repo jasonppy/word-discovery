@@ -124,17 +124,12 @@ with open(args.data_json, "r") as f:
 
 locF_temp = []
 j = 0
-# total_data = []
+
 data_dict = {}
 missing_ali = 0
-if args.tgt_layer_for_attn - model_args.encoder_layers >= 0:
-    print(f"\nmodel has {model_args.encoder_layers} layers in level1 encoder, but want to get feature from layer {args.tgt_layer_for_attn}, so use level 2 layer {args.tgt_layer_for_attn - model_args.encoder_layers + 1} (1-based)")
-    print(f"model has {model_args.encoder_layers} layers in level1 encoder, but want to get feature from layer {args.tgt_layer_for_attn}, so use level 2 layer {args.tgt_layer_for_attn - model_args.encoder_layers + 1} (1-based)\n")
-    level2 = True
-    tgt_layer = args.tgt_layer_for_attn - model_args.encoder_layers
-else:
-    level2 = False
-    tgt_layer = args.tgt_layer_for_attn
+
+level2 = False
+tgt_layer = args.tgt_layer_for_attn
 
 for item in tqdm.tqdm(data_json):
     if args.dataset == "spokencoco":

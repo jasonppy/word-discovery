@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 class ImageCaptionDataset(Dataset):
     @staticmethod
     def add_args(parser):
-        parser.add_argument("--train_audio_dataset_json_file", type=str, default="/data1/scratch/places_hdf5_pyp/metadata/train_2020.json")
-        parser.add_argument("--val_seen_audio_dataset_json_file", type=str, default="/data1/scratch/places_hdf5_pyp/metadata/dev_seen_2020.json")
-        parser.add_argument("--val_unseen_audio_dataset_json_file", type=str, default="/data1/scratch/places_hdf5_pyp/metadata/dev_unseen_2020.json")
+        parser.add_argument("--train_audio_dataset_json_file", type=str, default="/places_root/metadata/train_2020.json")
+        parser.add_argument("--val_seen_audio_dataset_json_file", type=str, default="/places_root/metadata/dev_seen_2020.json")
+        parser.add_argument("--val_unseen_audio_dataset_json_file", type=str, default="/places_root/metadata/dev_unseen_2020.json")
         parser.add_argument("--audio_feat_len", type=float, help="maximal audio length", default=18)
         parser.add_argument("--val_audio_feat_len", type=float, help="maximal audio length", default=25.)
         parser.add_argument("--normalize", action="store_true", default=False, help="whether or not normalize raw input, both w2v2 and hubert base doesn't normalize the input, but in exps in two papers, we normalized it, hopefully this doesn't make a difference")
@@ -36,16 +36,10 @@ class ImageCaptionDataset(Dataset):
             json_path = args.val_unseen_audio_dataset_json_file
         else:
             raise NotImplementedError
-        if "/scratch/cluster" in self.args.train_audio_dataset_json_file:
-            self.image_base_path = "/scratch/cluster/harwath/PlacesAudio_400k_distro/images"
-            self.audio_base_path = "/scratch/cluster/harwath/PlacesAudio_400k_distro"
-        elif "/data/scratch" in self.args.train_audio_dataset_json_file:
-            self.image_base_path = "/data/scratch/pyp/datasets/PlacesAudio_400k_distro/images"
-            self.audio_base_path = "/data/scratch/pyp/datasets/PlacesAudio_400k_distro"
-        else:
-            self.image_base_path = "/home/harwath/data/PlacesAudio_400k_distro/images"
-            self.audio_base_path = "/home/harwath/data/PlacesAudio_400k_distro"
-
+        raise RuntimeError(f"please replace /places_root/ with the actual root where you download the dataset, after than please delete this line")
+        self.image_base_path = "/places_root/PlacesAudio_400k_distro/images"
+        self.audio_base_path = "/places_root/PlacesAudio_400k_distro"
+        
         with open(json_path, 'r') as f:
             json_file = json.load(f)
 

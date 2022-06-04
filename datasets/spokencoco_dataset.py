@@ -31,16 +31,8 @@ class ImageCaptionDataset(Dataset):
         elif split == "val":
             audio_dataset_json_file = args.val_audio_dataset_json_file
 
-        self.audio_base_path = os.path.dirname(audio_dataset_json_file) 
-        if '/scratch/cluster' in audio_dataset_json_file:
-            self.image_base_path = "/scratch/cluster/harwath/COCO/coco_img"
-            self.audio_base_path = "/scratch/cluster/harwath/COCO/SpokenCOCO"
-        elif '/data/scratch' in audio_dataset_json_file:
-            self.image_base_path = "/data/scratch/pyp/datasets/coco_pyp/coco_img"
-            self.audio_base_path = "/data/scratch/pyp/datasets/coco_pyp/SpokenCOCO/"
-        else:
-            self.image_base_path = "/data1/scratch/coco_pyp/coco_img"
-            self.audio_base_path = "/data1/scratch/coco_pyp/SpokenCOCO/"
+        self.audio_base_path = os.path.dirname(audio_dataset_json_file)
+        self.image_base_path = "/".join(audio_dataset_json_file.split("/")[:-2])
 
         with open(audio_dataset_json_file, 'r') as fp:
             data_json = json.load(fp)
