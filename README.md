@@ -1,4 +1,5 @@
 # Word Discovery in Visually Grounded, Self-Supervised Speech Models
+===============================================================================
 This is the official codebase for paper [Word Discovery in Visually Grounded, Self-Supervised Speech Models](https://arxiv.org/pdf/2203.15081.pdf).
 ```
 @inproceedings{peng2022word,
@@ -10,7 +11,7 @@ This is the official codebase for paper [Word Discovery in Visually Grounded, Se
 ```
 
 ## 1. Environment
-It is recommended to create a new conda environment for this project with `conda create -n wd python=3.9`, the requirement on python version is not rigid, as long as you can install the packages listed in `./requirements.txt`. The requirement for the versions of packages is not rigid either, the listed version is tested, but lower version might also work.
+It is recommended to create a new conda environment for this project with `conda create -n wd python=3.9`, the requirement on python version is not rigid, as long as you can install the packages listed in `./requirements.txt`. The requirement for the versions of the packages is not rigid either, while the listed versions were tested, higher/lower versions might also work.
 
 If you want to get the attention weights of different attention head (**which is required for all word and boundary detection experiments**), you need to modify the output of the `multi_head_attention_forward` function in the PyTorch package at`torch/nn/functional`. if you install pytorch using conda in environment `wd`, the path of the file should be `path_to_conda/envs/wd/lib/python3.9/site-packages/torch/nn/functional.py`. get to function `multi_head_attention_forward`, and change the output as the following
 
@@ -257,3 +258,14 @@ wget https://data.csail.mit.edu/placesaudio/placesaudio_2020_splits.tar.gz -P ${
 cd ${places_root}
 tar -xf placesaudio_2020_splits.tar.gz
 ```
+
+# 6. Speech-Image retrieval for SpokenCOCO
+This section test VG-HuBERT_x on validation set of SpokenCOCO. Make sure you have model_root and data_root point to the right dir in ./scripts/validate.sh.
+
+run
+```bash
+cd ./scripts
+bash validate.sh
+```
+
+If you don't change other settings in validate.sh, the above run VG-HuBERT_3 on the val split of SpokenCOCO.
