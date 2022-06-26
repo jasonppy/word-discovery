@@ -5,7 +5,7 @@ This is the official codebase for paper [Word Discovery in Visually Grounded, Se
 @inproceedings{peng2022word,
   title={Word Discovery in Visually Grounded, Self-Supervised Speech Models},
   author={Peng, Puyuan and Harwath, David},
-  booktitle={arXiv},
+  booktitle={Interspeech},
   year={2022}
 }
 ```
