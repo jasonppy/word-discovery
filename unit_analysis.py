@@ -850,7 +850,7 @@ print(f"boundary over-segmentation: {b_os:.4f}")
 print(f"boundary R value: {b_r_val:.4f}")
 c2wf_th = threshold_by_var(c2wf, c2var, threshold=1)
 print_clustering_purity_nmi(c2wf_th)
-
+print_code_stats_by_f1(c2wf_th, range(200), num_word_show=1)
 count_high_f1_words(w2cf, f1_threshold=0.5)
 top_word_avg_f1 = compute_topk_avg_f1(w2cf, k=250)
 print("done",flush=True)

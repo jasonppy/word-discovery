@@ -1,6 +1,6 @@
 # Word Discovery in Visually Grounded, Self-Supervised Speech Models
-===============================================================================
 This is the official codebase for paper [Word Discovery in Visually Grounded, Self-Supervised Speech Models](https://arxiv.org/pdf/2203.15081.pdf).
+
 ```
 @inproceedings{peng2022word,
   title={Word Discovery in Visually Grounded, Self-Supervised Speech Models},
@@ -135,12 +135,35 @@ number of total codes occurance: 179179
 purity (using most occured word as code assignment): 0.759
 purity (using highest f1 word as code assignment): 0.681
 nmi: 0.115
+"a big table on discovered words, you can comment the use of `print_code_stats_by_f1` on around line 857 to disable that"
 1014 / 6085 words with an F1 score >= 0.5
 avg F1 = 89.30% for top 250 words; 23.81% for all 6001 words
 done
 ```
 
-To get the note that we set different layers and threshold for getting the best Area group, Boundary group and Word group result (for def of the metrics in these groups, plz refer to the [paper](https://arxiv.org/pdf/2203.15081.pdf)). The hyperparameters and results on val set for VG-HuBERT_3 and VG-HuBERT_4 is...
+To get the note that we set different layers and threshold for getting the best Area group, Boundary group and Word group result (for def of the metrics in these groups, plz refer to the [paper](https://arxiv.org/pdf/2203.15081.pdf)). The hyperparameters and results on SpokenCOCO test set for VG-HuBERT, VG-HuBERT_3, and VG-HuBERT_4 are ():
+### Area Group
+| Model       | threshold | layer | A-score | WC    | tIoU  | ToU   | CD     |
+|-------------|-----------|-------|---------|-------|-------|-------|--------|
+| VG-HuBERT   | 0.9       | 9    | 54.97   | 73.16 | 44.02 | 47.25 | 0.0890 |
+| VG-HuBERT_3 | 0.7       | 9    | 65.77   | 70.94 | 61.29 | 65.85 | 0.0646 |
+| VG-HuBERT_4 | 0.6       | 10    | 63.97   | 73.97 | 56.35 | 60.97 | 0.0789 |
+
+  
+### Boundary Group
+| Model       | threshold | layer | precision | recall | F1    | OS      | R-val  |
+|-------------|-----------|-------|-----------|--------|-------|---------|--------|
+| VG-HuBERT   | 0.9       | 9    | 18.31     | 18.90  | 18.60 | 0.0326  | 0.2960 |
+| VG-HuBERT_3 | 0.7       | 9    | 35.90     | 27.03  | 30.84 | -0.2472 | 0.4442 |
+| VG-HuBERT_4 | 0.8       | 9    | 28.39     | 25.64  | 26.94 | -0.0970 | 0.3964 |
+
+
+### Word Group
+| Model       | threshold | layer | WD   | WD std | purity | Pur. std |
+|-------------|-----------|-------|------|--------|--------|----------|
+| VG-HuBERT   | 0.93      | 9    | 823  | 20     | 63.2   | 0.4      |
+| VG-HuBERT_3 | 0.95      | 10    | 1167 | 26     | 75.3   | 0.2      |
+| VG-HuBERT_4 | 0.99      | 9    | 1230 | 18     | 75.2   | 0.2      |
 
 
 ## 4. Score VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020
