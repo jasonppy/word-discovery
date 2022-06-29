@@ -28,6 +28,29 @@ If you want to get the attention weights of different attention head (**which is
 
 Simply put, originally, the return of `attn_output_weights` is summed over all attention heads, and we don't want to do that so that we can have the attention weights from different heads.
 
+Note that since PyTorch 1.11, `multi_head_attention_forward` accepts argument `average_weights` which controls whether returning averaged attention or unaveraged attention. However, for minimal code change, we recommend ignore this argument and change the code in `multi_head_attention_forward` as
+
+```python
+    # if need_weights:
+    #     # optionally average attention weights over heads
+    #     attn_output_weights = attn_output_weights.view(bsz, num_heads, tgt_len, src_len)
+    #     if average_attn_weights:
+    #         attn_output_weights = attn_output_weights.sum(dim=1) / num_heads
+
+    #     if not is_batched:
+    #         # squeeze the output if input was unbatched
+    #         attn_output = attn_output.squeeze(1)
+    #         attn_output_weights = attn_output_weights.squeeze(0)
+    #     return attn_output, attn_output_weights
+    # else:
+    #     if not is_batched:
+    #         # squeeze the output if input was unbatched
+    #         attn_output = attn_output.squeeze(1)
+    #     return attn_output, None
+    attn_output_weights = attn_output_weights.view(bsz, num_heads, tgt_len, src_len)
+    return attn_output, attn_output_weights
+```
+
 ## 2. Apply VG-HuBERT on Speech Segmentation
 To enable quickly applying the VG-HuBERT on speech segmentation, we provide the following standalone script. You need to provide four arguments to make it run:
 
