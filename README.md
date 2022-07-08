@@ -10,6 +10,14 @@ This is the official codebase for paper [Word Discovery in Visually Grounded, Se
 }
 ```
 
+# Table of Contents
+1. [Environment](#environment)
+2. [Apply VG-HuBERT on Speech Segmentation](#apply-vg-huBERT-on-speech-segmentation)
+3. [Speech Segmentation and Word Detection on SpokenCOCO](#speech-segmentation-and-word-detection-on-spokencoco)
+4. [Apply VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020](#apply-vg-hubert-on-buckeye-segmentation-and-zerospeech2020)
+5. [Training](#training)
+6. [Speech-Image Retrieval on SpokenCOCO](#speech-image-retrieval-on-spokencoco)
+
 ## 1. Environment
 It is recommended to create a new conda environment for this project with `conda create -n wd python=3.9`, the requirement on python version is not rigid, as long as you can install the packages listed in `./requirements.txt`. The requirement for the versions of the packages is not rigid either, while the listed versions were tested, higher/lower versions might also work.
 
@@ -189,7 +197,7 @@ To get the note that we set different layers and threshold for getting the best 
 | VG-HuBERT_4 | 0.99      | 9    | 1230 | 18     | 75.2   | 0.2      |
 
 
-## 4. Score VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020
+## 4. Apply VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020
 This section illustrate how evaluate VG-HuBERT on Buckeye and ZeroSpeech2020 (i.e. to get result in table 4 and 5 in our [word discovery paper](https://arxiv.org/pdf/2203.15081.pdf))
 
 ### 4.1 Buckeye
@@ -305,7 +313,7 @@ cd ${places_root}
 tar -xf placesaudio_2020_splits.tar.gz
 ```
 
-# 6. Speech-Image retrieval for SpokenCOCO
+# 6. Speech-Image Retrieval on SpokenCOCO
 This section test VG-HuBERT_x on validation set of SpokenCOCO. Make sure you have model_root and data_root point to the right dir in ./scripts/validate.sh.
 
 run
