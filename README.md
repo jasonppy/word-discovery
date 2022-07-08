@@ -11,12 +11,12 @@ This is the official codebase for paper [Word Discovery in Visually Grounded, Se
 ```
 
 # Table of Contents
-1. [Environment](#environment)
-2. [Apply VG-HuBERT on Speech Segmentation](#apply-vg-huBERT-on-speech-segmentation)
-3. [Speech Segmentation and Word Detection on SpokenCOCO](#speech-segmentation-and-word-detection-on-spokencoco)
-4. [Apply VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020](#apply-vg-hubert-on-buckeye-segmentation-and-zerospeech2020)
-5. [Training](#training)
-6. [Speech-Image Retrieval on SpokenCOCO](#speech-image-retrieval-on-spokencoco)
+1. [Environment](#1-environment)
+2. [Apply VG-HuBERT on Speech Segmentation](#2-apply-vg-huBERT-on-speech-segmentation)
+3. [Speech Segmentation and Word Detection on SpokenCOCO](#3-speech-segmentation-and-word-detection-on-spokencoco)
+4. [Apply VG-HuBERT on Buckeye Segmentation and ZeroSpeech2020](#4-apply-vg-hubert-on-buckeye-segmentation-and-zerospeech2020)
+5. [Training](#5-training)
+6. [Speech-Image Retrieval on SpokenCOCO](#6-speech-image-retrieval-on-spokencoco)
 
 ## 1. Environment
 It is recommended to create a new conda environment for this project with `conda create -n wd python=3.9`, the requirement on python version is not rigid, as long as you can install the packages listed in `./requirements.txt`. The requirement for the versions of the packages is not rigid either, while the listed versions were tested, higher/lower versions might also work.
