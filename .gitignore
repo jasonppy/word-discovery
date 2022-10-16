@@ -6,3 +6,5 @@ __pycache__/
 *.png
 *.gif
 *.pdf
+test*
+*.log
