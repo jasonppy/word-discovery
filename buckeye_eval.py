@@ -37,7 +37,7 @@ def check_argv():
     parser.add_argument(
         "--word_tolerance", type=int,
         help="number of frames within which a word boundary prediction is "
-        "still considered correct (default: %(default)s)", default=3)
+        "still considered correct (default: %(default)s)", default=2)
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
