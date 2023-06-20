@@ -214,6 +214,23 @@ bash single_run_buckeye.sh vg-hubert_3 9 0.7 mean clsAttn buckeyetest
 ```
 you should get
 ```bash
+---------------------------------------------------------------------------
+Word boundaries:
+Precision: 36.19%
+Recall: 32.22%
+F-score: 34.09%
+OS: -10.98%
+R-value: 45.58%
+---------------------------------------------------------------------------
+Word token boundaries:
+Precision: 25.07%
+Recall: 23.17%
+F-score: 24.08%
+OS: -7.58%
+```
+Please note that I previous put the below results which is wrong as I set the tolerance to be 30ms by mistake. Thank [Chung-Ming](https://ming024.github.io/) for pointing this out:
+```bash
+---------------------------------------------------------------------------
 Word boundaries:
 Precision: 47.56%
 Recall: 42.34%
@@ -227,6 +244,7 @@ Recall: 29.81%
 F-score: 30.99%
 OS: -7.58%
 ```
+
 
 ### 4.2 ZeroSpeech2020
 We'll do the ZS2020 Spoken Term Discovery track (just English).
