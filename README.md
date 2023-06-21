@@ -210,7 +210,7 @@ After downloading is done. change the `model_root` and `data_root` in `./scripts
 
 ```bash
 cd scripts
-bash single_run_buckeye.sh vg-hubert_3 9 0.7 mean clsAttn buckeyetest
+bash run_buckeye.sh vg-hubert_3 9 0.7 mean clsAttn buckeyetest
 ```
 you should get
 ```bash
