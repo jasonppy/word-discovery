@@ -481,7 +481,8 @@ class AudioEncoder(BaseFairseqModel):
         x = features
         x_conv = self.pos_conv(x.transpose(1, 2))
         x_conv = x_conv.transpose(1, 2)
-        x += x_conv
+        # x += x_conv
+        x = x + x_conv
         if self.args.use_audio_cls_token:
             x = torch.cat([self.cls_token.repeat(x.shape[0],1,1), x], dim=1)
             if padding_mask != None:
@@ -579,7 +580,8 @@ class AudioEncoder(BaseFairseqModel):
 
         x_conv = self.pos_conv(x.transpose(1, 2))
         x_conv = x_conv.transpose(1, 2)
-        x += x_conv
+        # x += x_conv
+        x = x + x_conv
         # ############################################
         if self.args.use_audio_cls_token:
             x = torch.cat([self.cls_token.repeat(x.shape[0],1,1), x], dim=1)
